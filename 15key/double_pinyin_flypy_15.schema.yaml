@@ -1,0 +1,235 @@
+# Rime schema
+# encoding: utf-8
+
+schema:
+  schema_id: double_pinyin_flypy_15
+  name: 溪午不闻钟
+  version: "0.1.0"
+  author:
+    - Shortmund09 <shortmund09@gmail.com>
+    - double pinyin layout by 鶴
+    - Rime schema by 佛振 <chen.sst@gmail.com>
+    - sighsong
+  description: |
+    明月拼音＋小鹤双拼+14键方案，需要配置15键盘主题。
+  dependencies:
+    - stroke
+
+
+switches:
+  - name: ascii_mode
+    reset: 0
+    states: [ 中文, 西文 ]
+  - name: full_shape
+    reset: 0
+    states: [ 半角, 全角 ]
+  - name: simplification
+    states: [ 漢字, 汉字 ]
+    reset: 1
+  - name: ascii_punct
+    reset: 0
+    states: [ 。，, ．， ]
+
+engine:
+  processors:
+    - ascii_composer
+    - recognizer
+    - key_binder
+    - speller
+    - punctuator
+    - selector
+    - navigator
+    - express_editor
+  segmentors:
+    - ascii_segmentor
+    - matcher
+    - abc_segmentor
+    - punct_segmentor
+    - fallback_segmentor
+  translators:
+    - punct_translator
+    - reverse_lookup_translator
+    - script_translator
+  filters:
+    - simplifier
+    - uniquifier
+
+
+speller:
+  alphabet: zyxwvutsrqponmlkjihgfedcba
+  delimiter: "#"
+  algebra:
+    - erase/^xx$/
+    - derive/^([jqxy])u$/$1v/
+    - derive/^([aoe])([ioun])$/$1$1$2/
+    - xform/^([aoe])(ng)?$/$1$1$2/
+    - xform/iu$/Q/ #Q
+    - xform/(.)ei$/$1W/ #W
+    - xform/uan$/R/ #R
+    - xform/[uv]e$/R/ #T
+    - xform/un$/Y/ #Y
+    - xform/^sh/Y/ #U
+    - xform/^ch/I/ #I
+    - xform/^zh/C/ #V
+    - xform/uo$/I/ #O
+    - xform/ie$/P/ #P
+    - xform/i?ong$/S/ #S
+    - xform/ing$|uai$/K/ #K
+    - xform/(.)ai$/$1S/ #D
+    - xform/(.)en$/$1F/ #F
+    - xform/(.)eng$/$1F/ #G
+    - xform/[iu]ang$/K/ #L
+    - xform/(.)ang$/$1H/ #H
+    - xform/ian$/M/ #M
+    - xform/(.)an$/$1H/ #J
+    - xform/(.)ou$/$1Z/ #Z
+    - xform/[iu]a$/Z/ #X
+    - xform/iao$/B/ #N
+    - xform/(.)ao$/$1C/ #C
+    - xform/ui$/C/ #V
+    - xform/in$/B/ #B
+    - xlit/QWRYIPASFHKZCBM/qwryipasfhkzcbm/
+    - derive/e/w/
+    - derive/t/r/
+    - derive/u/y/
+    - derive/o/i/
+    - derive/d/s/
+    - derive/g/f/
+    - derive/j/h/
+    - derive/l/k/
+    - derive/x/z/
+    - derive/v/c/
+    - derive/n/b/
+
+    # 模糊音区域
+    # 依据个人情况修改注释～
+
+    # 声母部分
+    - derive/^([z])h/$1/ # zh => z
+    # - derive/^([z])([^h])/$1h$2/ # z => zh
+    - derive/^([c])h/$1/ # ch => c
+    # - derive/^([c])([^h])/$1h$2/ # c => ch
+    - derive/^([s])h/$1/ # sh => s
+    # - derive/^([s])([^h])/$1h$2/ # s => sh
+    # - derive/^l/n/ # l => n
+    # - derive/^n/l/ # n => l
+    #- derive/^r/l/ # r => l
+    #- derive/^r/y/ # r => y
+    #- derive/^hu$/fu/ # hu => fu
+    #- derive/^fu$/hu/ # fu => hu
+
+    # 韵母部分
+    # - derive/([a])n$/$1ng/ # an => ang
+    # - derive/([a])ng$/$1n/ # ang => an
+    # - derive/([e])n$/$1ng/ # en => eng
+    # - derive/([e])ng$/$1n/ # eng => en
+    - derive/([i])n$/$1ng/ # in => ing
+    - derive/([i])ng$/$1n/ # ing => in
+    # - derive/([i])an$/$1ang/ # ian => iang
+    # - derive/([i])ang$/$1an/ # iang => ian
+    # 由于小鹤双拼特性，无需 uang <=> iang
+
+    
+
+translator:
+  dictionary: rime_ice
+  prism: double_pinyin_flypy_15
+  contextual_suggestions: true
+  # spelling_hints: 4 # ～字以內候選標註完整帶調拼音
+  enable_user_dict: true
+  enable_completion: true
+  preedit_format:
+    - xform/([bpmfdtnljqx])n/$1iao/      # n
+    - xform/(\w)g/$1eng/     # g
+    - xform/(\w)q/$1iu/     # q
+    - xform/(\w)w/$1ei/     # w
+    - xform/([dtnlgkhjqxyvuirzcs])r/$1uan/     # e
+    - xform/(\w)t/$1ve/     # t
+    - xform/([dtlgkhjqxrzcs])y/$1un/     # y
+    - xform/([dtnlgkhvuirzcs])o/$1uo/     # 0
+    - xform/(\w)p/$1ie/     # p
+    - xform/([jqx])s/$1iong/     # s
+    - xform/(\w)s/$1ong/     # s
+    - xform/(\w)d/$1ai/     # d
+    - xform/(\w)f/$1en/     # f
+    - xform/(\w)h/$1ang/     # h
+    - xform/(\w)j/$1an/     # j
+    - xform/([gkhvuirzcs])k/$1uai/     # k
+    - xform/(\w)k/$1ing/     # k
+    - xform/([jqxnl])l/$1iang/     # l
+    - xform/(\w)l/$1uang/     # l
+    - xform/(\w)z/$1ou/     # z
+    - xform/([gkhvuirzcs])x/$1ua/     # x
+    - xform/(\w)x/$1ia/     # x
+    - xform/(\w)c/$1ao/     # c
+    - xform/([dtgkhvuirzcs])v/$1ui/     # v
+    - xform/(\w)b/$1in/     # b
+    - xform/(\w)m/$1ian/     #  m
+    - xform/([aoe])\1(\w)/$1$2/     # 
+    - "xform/(^|[ '])v/$1zh/"     # zh
+    - "xform/(^|[ '])i/$1ch/"     # ch
+    - "xform/(^|[ '])u/$1sh/"     # sh
+    - xform/([jqxy])v/$1u/     # u
+    - xform/([nl])v/$1ü/     # u
+
+   # comment_format: 
+    # - xform/([bpmfdtnljqx])iao$/$1n/      # n
+    # - xform/(\w)eng$/$1g/     # g
+    # - xform/(\w)iu$/$1q/     # q
+    # - xform/(\w)ei$/$1w/     # w
+    # - xform/([dtnlgkhjqxyvuirzcs])uan$/$1r/     # e
+    # - xform/(\w)ve$/$1t/     # t
+    # - xform/(\w)un$/$1y/     # y
+    # - xform/([dtnlgkhvuirzcs])uo$/$1o/     # 0
+    # - xform/(\w)ie$/$1p/     # p
+    # - xform/(\w)ong$/$1s/     # s
+    # - xform/([jqx])iong$/$1s/     # s
+    # - xform/(\w)ai$/$1d/     # d
+    # - xform/(\w)en$/$1f/     # f
+    # - xform/(\w)an$/$1j/     # j
+    # - xform/(\w)ang/$1h/     # h
+    # - xform/([gkhvuirzcs])uai$/$1k/     # k
+    # - xform/(\w)ing$/$1k/     # k
+    # - xform/([jqxnl])iang$/$1l/     # l
+    # - xform/(\w)uang$/$1l/     # l
+    # - xform/(\w)ou$/$1z/     # z
+    # - xform/([gkhvuirzcs])ua$/$1x/     # x
+    # - xform/(\w)ia$/$1x/     # x
+    # - xform/(\w)ao$/$1c/     # c
+    # - xform/([dtgkhvuirzcs])ui$/$1v/     # v
+    # - xform/(\w)in$/$1b/     # b
+    # - xform/(\w)ian$/$1m/     #  m
+    # - xform/([aoe])\1(\w)/$1$2/     # 
+    # - "xform/(^|[ '])v/$1zh/"     # zh
+    # - "xform/(^|[ '])i/$1ch/"     # ch
+    # - "xform/(^|[ '])u/$1sh/"     # sh
+    # - xform/([jqxy])v/$1u/     # u
+    # - xform/([nl])v/$1ü/     # u
+    # 
+
+
+
+
+
+   # - "xform/#/-/" #去掉编码提示前的~号
+
+
+
+reverse_lookup:
+  dictionary: liangfen
+  enable_completion: true
+  prefix: '`'              # 以 ` 开头来反查
+  enable_completion: true  # 补全提示
+  tips: 〔两分〕
+
+punctuator:
+  import_preset: default
+
+key_binder:
+  import_preset: default
+
+recognizer:
+  import_preset: default
+  patterns:
+    reverse_lookup: "`[a-z]*'?$"
+    
